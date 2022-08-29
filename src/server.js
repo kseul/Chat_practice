@@ -2,6 +2,11 @@ import express, { application } from 'express';
 
 const app = express();
 
-console.log('hello');
+app.set('view engine', 'pug');
+app.set('views', __dirname + '/public/views');
+app.use('/public', express.static(__dirname + '/public'));
 
-app.listen(3000);
+app.get('/', (req, res) => res.render('home'));
+
+const handleListen = () => console.log('hello');
+app.listen(3000, handleListen);
