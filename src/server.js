@@ -25,6 +25,9 @@ io.on('connection', (socket) => {
     socket.join(roomName); // 1. 방에 참가하면
     done(); // 2. 함수를 호출하고
     socket.to(roomName).emit('웰컴'); // 4. '웰컴' event를 rommName에 있는 모든 사람들에게 emit 함
+    socket.on('disconnecting', () => {
+      socket.rooms.forEach((room) => socket.to(room).emit('바이'));
+    });
   });
 });
 
