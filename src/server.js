@@ -16,15 +16,32 @@ const handleListen = () => console.log('hello');
 const server = http.createServer(app); // http 서버
 const wss = new WebSocket.Server({ server }); // WebSocket 서버
 
+const sockets = [];
+
 wss.on('connection', (socket) => {
-  // console.log(socket);
+  sockets.push(socket);
+  socket['nickname'] = '없음';
   console.log('클라이언트 / 브라우저와 연결 🌟');
   socket.send('hi!!!');
   socket.on('close', () =>
     console.log('클라이언트 / 브라우저로부터 연결이 끊김🔥')
   );
-  socket.on('message', (message) => {
-    console.log(message.toString());
+  socket.on('message', (msg) => {
+    const message = JSON.parse(msg.toString());
+    switch (message.type) {
+      case 'newMessage': {
+        sockets.forEach((aSocket) =>
+          aSocket.send(`${socket.nickname}: ${message.payload}`)
+        );
+        break;
+      }
+      case 'nickname':
+        {
+          console.log(message.payload);
+          socket['nickname'] = message.payload;
+        }
+        break;
+    }
   });
 });
 

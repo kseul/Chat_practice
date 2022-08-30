@@ -10,7 +10,12 @@ html(lang="en")
   header
     h1 seul
     main 
-    h2 Welcome to seul
-
+      form#nick
+          input(type="text", placeholder="nickname", required)
+          button Save
+      ul
+      form#message
+        input(type="text", placeholder="메세지", required)
+        button Send
 
     script(src="/public/js/app.js")
