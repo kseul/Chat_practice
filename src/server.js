@@ -28,6 +28,10 @@ io.on('connection', (socket) => {
     socket.on('disconnecting', () => {
       socket.rooms.forEach((room) => socket.to(room).emit('바이'));
     });
+    socket.on('new_message', (msg, room, done) => {
+      socket.to(room).emit('new_message', msg); // new_message 이름이 같아도 상관 없다. / 이 작업이 끝난 뒤 아래 done 함수 호출
+      done();
+    });
   });
 });
 
