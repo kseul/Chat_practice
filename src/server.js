@@ -13,11 +13,18 @@ app.get('/*', (req, res) => res.redirect('/'));
 
 const handleListen = () => console.log('hello');
 
+//
 const httpServer = http.createServer(app);
 const io = SocketIO(httpServer);
 
 io.on('connection', (socket) => {
-  console.log(socket);
+  // console.log(socket);
+  socket.on('enter_room', (msg, done) => {
+    console.log(msg);
+    setTimeout(() => {
+      done('안녕 프론트엔드 ?');
+    }, 5000);
+  });
 });
 
 // wss.on('connection', (socket) => {
