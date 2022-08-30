@@ -18,12 +18,13 @@ const httpServer = http.createServer(app);
 const io = SocketIO(httpServer);
 
 io.on('connection', (socket) => {
-  // console.log(socket);
-  socket.on('enter_room', (msg, done) => {
-    console.log(msg);
-    setTimeout(() => {
-      done('안녕 프론트엔드 ?');
-    }, 5000);
+  socket.onAny((e) => {
+    console.log(`소켓이벤트: ${e}`);
+  });
+  socket.on('enter_room', (roomName, done) => {
+    socket.join(roomName); // 1. 방에 참가하면
+    done(); // 2. 함수를 호출하고
+    socket.to(roomName).emit('웰컴'); // 4. '웰컴' event를 rommName에 있는 모든 사람들에게 emit 함
   });
 });
 
