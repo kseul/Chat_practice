@@ -10,12 +10,5 @@ html(lang="en")
   header
     h1 seul
     main 
-      form#nick
-          input(type="text", placeholder="nickname", required)
-          button Save
-      ul
-      form#message
-        input(type="text", placeholder="메세지", required)
-        button Send
-
+    script(src="/socket.io/socket.io.js")
     script(src="/public/js/app.js")
