@@ -18,21 +18,25 @@ const httpServer = http.createServer(app);
 const io = SocketIO(httpServer);
 
 io.on('connection', (socket) => {
+  socket['nickname'] = '익명';
   socket.onAny((e) => {
     console.log(`소켓이벤트: ${e}`);
   });
   socket.on('enter_room', (roomName, done) => {
-    socket.join(roomName); // 1. 방에 참가하면
-    done(); // 2. 함수를 호출하고
-    socket.to(roomName).emit('웰컴'); // 4. '웰컴' event를 rommName에 있는 모든 사람들에게 emit 함
-    socket.on('disconnecting', () => {
-      socket.rooms.forEach((room) => socket.to(room).emit('바이'));
-    });
-    socket.on('new_message', (msg, room, done) => {
-      socket.to(room).emit('new_message', msg); // new_message 이름이 같아도 상관 없다. / 이 작업이 끝난 뒤 아래 done 함수 호출
-      done();
-    });
+    socket.join(roomName);
+    done();
+    socket.to(roomName).emit('웰컴', socket.nickname);
   });
+  socket.on('disconnecting', () => {
+    socket.rooms.forEach((room) =>
+      socket.to(room).emit('바이', socket.nickname)
+    );
+  });
+  socket.on('new_message', (msg, room, done) => {
+    socket.to(room).emit('new_message', `${socket.nickname}: ${msg}`);
+    done();
+  });
+  socket.on('nickname', (nickname) => (socket['nickname'] = nickname));
 });
 
 // wss.on('connection', (socket) => {
